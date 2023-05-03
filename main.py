@@ -36,7 +36,8 @@ with app.app_context():
 
 @app.route("/")
 def home():
-    return render_template("index.html")
+    movies = Movie.query.all()
+    return render_template("index.html", movies=movies)
 
 
 if __name__ == "__main__":
