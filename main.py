@@ -3,9 +3,8 @@ import requests
 from flask import Flask, render_template, redirect, url_for, request
 from flask_bootstrap import Bootstrap5
 from flask_sqlalchemy import SQLAlchemy
-from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
-from wtforms.validators import DataRequired
+
+from forms import EditForm
 
 # create the extension
 db = SQLAlchemy()
@@ -16,7 +15,7 @@ app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///movies.db"
 # initialize the app with the extension
 db.init_app(app)
-Bootstrap5(app)
+bootstrap = Bootstrap5(app)
 
 
 class Movie(db.Model):
@@ -38,6 +37,13 @@ with app.app_context():
 def home():
     movies = Movie.query.all()
     return render_template("index.html", movies=movies)
+
+
+@app.route("/edit/<int:id>")
+def edit(id):
+    movie_to_edit = Movie.query.get(id)
+    edit_form = EditForm()
+    return render_template("edit.html", movie=movie_to_edit, form=edit_form)
 
 
 if __name__ == "__main__":
