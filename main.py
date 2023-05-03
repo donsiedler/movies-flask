@@ -20,7 +20,14 @@ Bootstrap5(app)
 
 
 class Movie(db.Model):
-    pass
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String, nullable=False)
+    year = db.Column(db.Integer, nullable=False)
+    description = db.Column(db.String, nullable=False)
+    rating = db.Column(db.Float, nullable=False)
+    ranking = db.Column(db.Integer, nullable=False)
+    review = db.Column(db.String, nullable=False)
+    img_url = db.Column(db.String, nullable=False)
 
 
 @app.route("/")
