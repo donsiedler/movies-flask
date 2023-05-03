@@ -13,7 +13,7 @@ db = SQLAlchemy()
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
 # configure the SQLite database, relative to the app instance folder
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:////movies.db"
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///movies.db"
 # initialize the app with the extension
 db.init_app(app)
 Bootstrap5(app)
@@ -28,6 +28,10 @@ class Movie(db.Model):
     ranking = db.Column(db.Integer, nullable=False)
     review = db.Column(db.String, nullable=False)
     img_url = db.Column(db.String, nullable=False)
+
+
+with app.app_context():
+    db.create_all()
 
 
 @app.route("/")
