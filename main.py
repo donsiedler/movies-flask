@@ -39,10 +39,15 @@ def home():
     return render_template("index.html", movies=movies)
 
 
-@app.route("/edit/<int:id>")
+@app.route("/edit/<int:id>", methods=["GET", "POST"])
 def edit(id):
     movie_to_edit = Movie.query.get(id)
     edit_form = EditForm()
+    if edit_form.validate_on_submit():
+        movie_to_edit.rating = float(edit_form.rating.data)
+        movie_to_edit.review = edit_form.review.data
+        db.session.commit()
+        return redirect(url_for('home'))
     return render_template("edit.html", movie=movie_to_edit, form=edit_form)
 
 
