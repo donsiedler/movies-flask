@@ -4,7 +4,7 @@ from flask import Flask, render_template, redirect, url_for, request
 from flask_bootstrap import Bootstrap5
 from flask_sqlalchemy import SQLAlchemy
 
-from forms import EditForm
+from forms import EditForm, AddForm
 
 # create the extension
 db = SQLAlchemy()
@@ -37,6 +37,15 @@ with app.app_context():
 def home():
     movies = Movie.query.all()
     return render_template("index.html", movies=movies)
+
+
+@app.route("/add", methods=["GET", "POST"])
+def add():
+    add_form = AddForm()
+    if add_form.validate_on_submit():
+        pass
+        return redirect(url_for('home'))
+    return render_template("add.html", form=add_form)
 
 
 @app.route("/edit/<int:id>", methods=["GET", "POST"])
