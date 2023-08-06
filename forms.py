@@ -7,3 +7,8 @@ class EditForm(FlaskForm):
     rating = StringField(label="Your Rating Out of 10 e.g. 7.5", validators=[DataRequired()])
     review = StringField(label="Your Review", validators=[DataRequired()])
     submit = SubmitField(label="Done")
+
+
+class AddForm(FlaskForm):
+    title = StringField(label="Movie Title", validators=[DataRequired()])
+    submit = SubmitField(label="Add Movie")
