@@ -6,6 +6,8 @@ from flask_sqlalchemy import SQLAlchemy
 
 from forms import EditForm, AddForm
 
+TMDB_API_KEY = os.environ.get("TMDB_API_KEY")
+
 # create the extension
 db = SQLAlchemy()
 # create the app
@@ -43,7 +45,14 @@ def home():
 def add():
     add_form = AddForm()
     if add_form.validate_on_submit():
-        pass
+        movie_title = add_form.title.data
+        url = f"https://api.themoviedb.org/3/search/movie?query={movie_title}&include_adult=false&language=en-US&page=1"
+        headers = {
+            "accept": "application/json",
+            "Authorization": TMDB_API_KEY,
+        }
+        response = requests.get(url, headers=headers)
+        print(response.text)
         return redirect(url_for('home'))
     return render_template("add.html", form=add_form)
 
