@@ -52,8 +52,9 @@ def add():
             "Authorization": TMDB_API_KEY,
         }
         response = requests.get(url, headers=headers)
-        print(response.text)
-        return redirect(url_for('home'))
+        response.raise_for_status()
+        movies = response.json()["results"]
+        return render_template("select.html", movies=movies)
     return render_template("add.html", form=add_form)
 
 
