@@ -67,7 +67,7 @@ def add():
         db.session.add(movie_to_add)
         db.session.commit()
 
-        return redirect(url_for('home'))
+        return redirect(url_for('edit', id=movie_to_add.id))
 
     add_form = AddForm()
     if add_form.validate_on_submit():
