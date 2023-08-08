@@ -25,9 +25,9 @@ class Movie(db.Model):
     title = db.Column(db.String, nullable=False)
     year = db.Column(db.Integer, nullable=False)
     description = db.Column(db.String, nullable=False)
-    rating = db.Column(db.Float, nullable=False)
-    ranking = db.Column(db.Integer, nullable=False)
-    review = db.Column(db.String, nullable=False)
+    rating = db.Column(db.Float, nullable=True)
+    ranking = db.Column(db.Integer, nullable=True)
+    review = db.Column(db.String, nullable=True)
     img_url = db.Column(db.String, nullable=False)
 
 
@@ -43,6 +43,32 @@ def home():
 
 @app.route("/add", methods=["GET", "POST"])
 def add():
+    movie_id = request.args.get("movie_id")
+    if movie_id:
+        url = f"https://api.themoviedb.org/3/movie/{movie_id}?language=en-US"
+        headers = {
+            "accept": "application/json",
+            "Authorization": TMDB_API_KEY,
+        }
+        response = requests.get(url, headers=headers)
+        movie = response.json()
+        title = movie.get("title")
+        img_url = "https://image.tmdb.org/t/p/w500/" + movie.get("poster_path")
+        year = movie.get("release_date").split("-")[0]
+        description = movie.get("overview")
+        rating = round(float(movie.get("vote_average")), 1)
+
+        movie_to_add = Movie(title=title,
+                             year=year,
+                             description=description,
+                             rating=rating,
+                             img_url=img_url,
+                             )
+        db.session.add(movie_to_add)
+        db.session.commit()
+
+        return redirect(url_for('home'))
+
     add_form = AddForm()
     if add_form.validate_on_submit():
         movie_title = add_form.title.data
